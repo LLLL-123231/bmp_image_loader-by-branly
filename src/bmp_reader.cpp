@@ -10,10 +10,11 @@ bool ReadBMP(std::string imagepath, unsigned char *&header, unsigned char *&rgbD
     unsigned int height;
     unsigned short bitsPerPixel;
 
-    // Open the file
+     // Open the file
     FILE *file = fopen(imagepath.c_str(), "rb");
     if (!file)
     {
+        std::cout << imagepath << std::endl;
         std::cerr << "Image could not be opened"
                   << std::endl;
         return false;
@@ -95,6 +96,38 @@ bool ApplyGrayFilter(unsigned char *&header, unsigned char *&rgbData)
     }
     return true;
 }
+
+bool FlipHorizontally(unsigned char *&header, unsigned char *&rgbData)
+{
+    // get the width, height and bytes per pixel
+    const int width = *(int *)&header[WIDTH_INDEX];    
+    const int height = *(int *)&header[HEIGHT_INDEX]; 
+    const int bytesPerPixel = (*(short *)&header[BITS_PER_PIXEL_INDEX]) / BITS_PER_BYTE;
+
+
+    for (int row = 0; row < height; ++row)
+    {
+        int start = row * width * bytesPerPixel;      
+        int end = start + (width - 1) * bytesPerPixel;
+
+        
+        while (start < end)
+        {
+            for (int i = 0; i < bytesPerPixel; ++i)
+            {
+                
+                std::swap(rgbData[start + i], rgbData[end + i]);
+            }
+            start += bytesPerPixel;   
+            end -= bytesPerPixel;   
+        }
+    }
+
+    return true; 
+}
+
+
+
 
 bool FlipVertically(unsigned char *&header, unsigned char *&rgbData)
 {

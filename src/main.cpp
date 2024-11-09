@@ -15,12 +15,15 @@ int main(void)
     unsigned int imageSize;
     unsigned int headerSize;
     cout << "Reading the BMP file ... " << endl;
-    ReadBMP("img/test.bmp", header, rgbData, headerSize, imageSize);
+
+    ReadBMP("test.bmp", header, rgbData, headerSize, imageSize);
     ApplyGrayFilter(header,rgbData);
     FlipVertically(header,rgbData);
+    //added
+    FlipHorizontally(header,rgbData);
 
     cout << "Writing a new BMP file based on data read from a BMP in the previous step ..." << endl;
-    WriteBMP("img/test2.bmp", header, rgbData, headerSize, imageSize);
+    WriteBMP("test2.bmp", header, rgbData, headerSize, imageSize);
     cout << "Freeing resources..." << endl;
     delete[] rgbData;
     delete[] header;
